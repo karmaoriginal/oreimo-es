@@ -1,0 +1,21 @@
+name: patch-iso
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: sudo apt-get install -y genisoimage mame-tools
+      - name: Bajar CHD
+        run: curl -L "${{ secrets.ISO_URL }}" -o game.chd
+      - name: CHD a ISO
+        run: chdman extractdvd -i game.chd -o game.iso
+      - run: chmod +x build_iso.sh && ./build_iso.sh game.iso --out oreimo_es.iso
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oreimo_es
+          path: oreimo_es.iso
+          retention-days: 1
