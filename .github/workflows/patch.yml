@@ -8,11 +8,11 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - run: sudo apt-get install -y genisoimage mame-tools
+      - run: sudo apt-get install -y genisoimage mame-tools megatools
       - name: Bajar CHD
-        run: curl -L "${{ secrets.ISO_URL }}" -o game.chd
+        run: megadl "${{ secrets.ISO_URL }}" --path game.chd
       - name: Revisar descarga
-        run: ls -lh game.chd && head -c 300 game.chd
+        run: ls -lh game.chd
       - name: CHD a ISO
         run: chdman extractdvd -i game.chd -o game.iso
       - run: chmod +x build_iso.sh && ./build_iso.sh game.iso --out oreimo_es.iso
